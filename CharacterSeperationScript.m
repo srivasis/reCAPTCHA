@@ -54,13 +54,14 @@ else
 end
 
 for k=1:size(char_imgs, 2)
-    folder = strcat('split_images\',char_labels{k});
-    mkdir(folder);
+    folder = strcat('split_images/',char_labels{k});
+    if ~isfolder(folder)
+        mkdir(folder);
+    end
     baseFileName = sprintf('%s.png', string(k));
     fullFileName = fullfile(folder, baseFileName);
     imwrite(char_imgs{k}, fullFileName);
 end
-
 
 function [img1, img2, img3, img4] = charSeperator(img)
     mask = img>=120;
@@ -72,8 +73,8 @@ function [img1, img2, img3, img4] = charSeperator(img)
     m3 = round((c(2)+c(3))/2);
     m4 = round((c(3)+c(4))/2);
     m5 = round((c(4)+size(img,2))/2);
-    img1 = img(:,m1:m2);
-    img2 = img(:,m2:m3);
-    img3 = img(:,m3:m4);
-    img4 = img(:,m4:m5);
+    img1 = imresize(img(:,m1:m2),[28,28]);
+    img2 = imresize(img(:,m2:m3),[28,28]);
+    img3 = imresize(img(:,m3:m4),[28,28]);
+    img4 = imresize(img(:,m4:m5),[28,28]);
 end
