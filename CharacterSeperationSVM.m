@@ -63,19 +63,16 @@ for k=1:size(char_imgs, 2)
     imwrite(char_imgs{k}, fullFileName);
 end
 
-
 function [img1, img2, img3, img4] = charSeperator(img)
     mask = img>=120;
-    [x,y] = find(mask==1);
-    [idx,c] = kmeans(y,4);
-    c = sort(c);
-    m1 = round(c(1)/2);
-    m2 = round((c(1)+c(2))/2);
-    m3 = round((c(2)+c(3))/2);
-    m4 = round((c(3)+c(4))/2);
-    m5 = round((c(4)+size(img,2))/2);
-    img1 = imresize(img(:,m1:m2),[24,18]);
-    img2 = imresize(img(:,m2:m3),[24,18]);
-    img3 = imresize(img(:,m3:m4),[24,18]);
-    img4 = imresize(img(:,m4:m5),[24,18]);
+    y = sum(255-mask.*255);
+    bar(y);
+    lm = islocalmin(y);
+    w = -9999*(lm-1);
+    [v,i] = mink(y+w,3);
+    i = sort(i);
+    img1 = imresize(img(:,1:i(1)),[24,18]);
+    img2 = imresize(img(:,i(1):i(2)),[24,18]);
+    img3 = imresize(img(:,i(2):i(3)),[24,18]);
+    img4 = imresize(img(:,i(3):size(img,2)),[24,18]);
 end
